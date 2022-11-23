@@ -72,6 +72,44 @@ $$
 
 [Источник данных](https://fedstat.ru/indicator/33553)
 
+```{r}
+url_orig = 'https://github.com/bdemeshev/webinar_eusp_forecasting_r_2021_03_13/raw/main/original_data.xls'
+```
+
+Встаем на плечи гигантов и подключаем пакеты :)
+```{r}
+library(rio) # импорт-экспорт данных
+library(tidyverse) # визуализация + обработка данных 
+library(fpp3) # пачка пакетов по времен рядам
+```
+
+Смотрим на наш набор данных!
+```{r}
+d = import('original_data.csv')
+colnames(d) = d[3, ]
+d1 = d[-(1:3), ]
+d2 = d1[, -2]
+colnames(d2)[1:2] = c('region', 'period')
+
+# export(d2, 'd2.csv')
+# d2 = import('d2.csv')
+
+unique(d2$region)
+d3 = filter(d2, !str_detect(period, '-'))
+d4 = separate(d3, period, c('percode', 'month'), sep = ' ')
+
+d5 = pivot_longer(d4, cols=`2006`:`2020`,
+                  names_to = 'year',
+                  values_to = 'marriage')
+d6 = separate(d5, region, c('regcode', 'region'), 
+              sep = ' ', extra = 'merge')
+d7 = select(d6, -percode)
+
+# export(d7, 'd7.csv')
+# d7 = import('d7.csv')
+
+```
+
 
 
 
