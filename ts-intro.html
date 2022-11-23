@@ -15,6 +15,69 @@ span.underline{text-decoration: underline;}
 div.column{display: inline-block; vertical-align: top; width: 50%;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
 </style>
 
 
@@ -99,6 +162,334 @@ y_t = \ell_{t-1} + b_{t-1} + s_{t-12} + u_t
 <h2 class="anchored" data-anchor-id="метод-максимального-правдоподобия">Метод максимального правдоподобия:</h2>
 <p>Выберем такие оценки неизвестных параметров, чтобы <strong>максимизировать вероятность</strong> имеющегося набора данных.</p>
 <p>После решения задачи максимизации: <span class="math inline">\(\hat\alpha\)</span>, <span class="math inline">\(\hat\beta\)</span>, <span class="math inline">\(\hat\gamma\)</span>, ….</p>
+</section>
+<section id="вторая-часть-мерлезонского-балета" class="level2">
+<h2 class="anchored" data-anchor-id="вторая-часть-мерлезонского-балета">Вторая часть Мерлезонского балета :)</h2>
+<p><a href="https://fedstat.ru/indicator/33553">Источник данных</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>url_orig <span class="ot">=</span> <span class="st">'https://github.com/bdemeshev/webinar_eusp_forecasting_r_2021_03_13/raw/main/original_data.xls'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Встаем на плечи гигантов и подключаем пакеты :)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rio) <span class="co"># импорт-экспорт данных</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse) <span class="co"># визуализация + обработка данных </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ─────────────────────────────────────── tidyverse 1.3.2 ──
+✔ ggplot2 3.3.6      ✔ purrr   0.3.5 
+✔ tibble  3.1.8      ✔ dplyr   1.0.10
+✔ tidyr   1.2.1      ✔ stringr 1.4.1 
+✔ readr   2.1.3      ✔ forcats 0.5.2 
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(fpp3) <span class="co"># пачка пакетов по времен рядам</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>── Attaching packages ──────────────────────────────────────────── fpp3 0.4.0 ──
+✔ lubridate   1.8.0     ✔ feasts      0.3.0
+✔ tsibble     1.1.3     ✔ fable       0.3.2
+✔ tsibbledata 0.4.1     
+── Conflicts ───────────────────────────────────────────────── fpp3_conflicts ──
+✖ lubridate::date()    masks base::date()
+✖ dplyr::filter()      masks stats::filter()
+✖ tsibble::intersect() masks base::intersect()
+✖ tsibble::interval()  masks lubridate::interval()
+✖ dplyr::lag()         masks stats::lag()
+✖ tsibble::setdiff()   masks base::setdiff()
+✖ tsibble::union()     masks base::union()</code></pre>
+</div>
+</div>
+<p>Смотрим на наш набор данных!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>d <span class="ot">=</span> <span class="fu">import</span>(<span class="st">'original_data.csv'</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(d) <span class="ot">=</span> d[<span class="dv">3</span>, ]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>d1 <span class="ot">=</span> d[<span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>), ]</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>d2 <span class="ot">=</span> d1[, <span class="sc">-</span><span class="dv">2</span>]</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(d2)[<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>] <span class="ot">=</span> <span class="fu">c</span>(<span class="st">'region'</span>, <span class="st">'period'</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># export(d2, 'd2.csv')</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># d2 = import('d2.csv')</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">unique</span>(d2<span class="sc">$</span>region)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  [1] "643 Российская Федерация"                                                                                            
+  [2] "030 Центральный федеральный округ"                                                                                   
+  [3] "14000000000 Белгородская область"                                                                                    
+  [4] "15000000000 Брянская область"                                                                                        
+  [5] "17000000000 Владимирская область"                                                                                    
+  [6] "20000000000 Воронежская область"                                                                                     
+  [7] "24000000000 Ивановская область"                                                                                      
+  [8] "29000000000 Калужская область"                                                                                       
+  [9] "34000000000 Костромская область"                                                                                     
+ [10] "38000000000 Курская область"                                                                                         
+ [11] "42000000000 Липецкая область"                                                                                        
+ [12] "46000000000 Московская область"                                                                                      
+ [13] "54000000000 Орловская область"                                                                                       
+ [14] "61000000000 Рязанская область"                                                                                       
+ [15] "66000000000 Смоленская область"                                                                                      
+ [16] "68000000000 Тамбовская область"                                                                                      
+ [17] "28000000000 Тверская область"                                                                                        
+ [18] "70000000000 Тульская область"                                                                                        
+ [19] "78000000000 Ярославская область"                                                                                     
+ [20] "45000000000 Город Москва столица Российской Федерации город федерального значения"                                   
+ [21] "041 Сибирский федеральный округ"                                                                                     
+ [22] "84000000000 Республика Алтай"                                                                                        
+ [23] "93000000000 Республика Тыва"                                                                                         
+ [24] "95000000000 Республика Хакасия"                                                                                      
+ [25] "01000000000 Алтайский край"                                                                                          
+ [26] "04000000000 Красноярский край"                                                                                       
+ [27] "04100000000 Таймырский (Долгано-Ненецкий) автономный округ (Красноярский край)"                                      
+ [28] "04130000000 Эвенкийский автономный округ (Красноярский край)"                                                        
+ [29] "25000000000 Иркутская область"                                                                                       
+ [30] "25100000000 Усть-Ордынский Бурятский округ"                                                                          
+ [31] "32000000000 Кемеровская область - Кузбасс"                                                                           
+ [32] "50000000000 Новосибирская область"                                                                                   
+ [33] "52000000000 Омская область"                                                                                          
+ [34] "69000000000 Томская область"                                                                                         
+ [35] "042 Дальневосточный федеральный округ"                                                                               
+ [36] "81000000000 Республика Бурятия"                                                                                      
+ [37] "76000000000 Забайкальский край"                                                                                      
+ [38] "76100000000 Агинский Бурятский округ (Забайкальский край)"                                                           
+ [39] "98000000000 Республика Саха (Якутия)"                                                                                
+ [40] "30000000000 Камчатский край"                                                                                         
+ [41] "            30100000000 Корякский округ, входящий в состав Камчатского края"                                         
+ [42] "05000000000 Приморский край"                                                                                         
+ [43] "08000000000 Хабаровский край"                                                                                        
+ [44] "10000000000 Амурская область"                                                                                        
+ [45] "44000000000 Магаданская область"                                                                                     
+ [46] "64000000000 Сахалинская область"                                                                                     
+ [47] "99000000000 Еврейская автономная область"                                                                            
+ [48] "77000000000 Чукотский автономный округ"                                                                              
+ [49] "031 Северо-Западный федеральный округ"                                                                               
+ [50] "86000000000 Республика Карелия"                                                                                      
+ [51] "87000000000 Республика Коми"                                                                                         
+ [52] "11000000000 Архангельская область"                                                                                   
+ [53] "11100000000 Ненецкий автономный округ (Архангельская область)"                                                       
+ [54] "11001000000 Архангельская область (кроме Ненецкого автономного округа)"                                              
+ [55] "19000000000 Вологодская область"                                                                                     
+ [56] "27000000000 Калининградская область"                                                                                 
+ [57] "41000000000 Ленинградская область"                                                                                   
+ [58] "47000000000 Мурманская область"                                                                                      
+ [59] "49000000000 Новгородская область"                                                                                    
+ [60] "58000000000 Псковская область"                                                                                       
+ [61] "40000000000 Город Санкт-Петербург город федерального значения"                                                       
+ [62] "032 Южный федеральный округ (по 2009 год)"                                                                           
+ [63] "037 Южный федеральный округ (с 2010 года)"                                                                           
+ [64] "040 Южный федеральный округ (с 29.07.2016)"                                                                          
+ [65] "79000000000 Республика Адыгея (Адыгея)"                                                                              
+ [66] "85000000000 Республика Калмыкия"                                                                                     
+ [67] "35000000000 Республика Крым"                                                                                         
+ [68] "03000000000 Краснодарский край"                                                                                      
+ [69] "12000000000 Астраханская область"                                                                                    
+ [70] "18000000000 Волгоградская область"                                                                                   
+ [71] "60000000000 Ростовская область"                                                                                      
+ [72] "67000000000 Город федерального значения Севастополь"                                                                 
+ [73] "038 Северо-Кавказский федеральный округ"                                                                             
+ [74] "82000000000 Республика Дагестан"                                                                                     
+ [75] "26000000000 Республика Ингушетия"                                                                                    
+ [76] "83000000000 Кабардино-Балкарская Республика"                                                                         
+ [77] "91000000000 Карачаево-Черкесская Республика"                                                                         
+ [78] "90000000000 Республика Северная Осетия-Алания"                                                                       
+ [79] "96000000000 Чеченская Республика"                                                                                    
+ [80] "07000000000 Ставропольский край"                                                                                     
+ [81] "033 Приволжский федеральный округ"                                                                                   
+ [82] "80000000000 Республика Башкортостан"                                                                                 
+ [83] "88000000000 Республика Марий Эл"                                                                                     
+ [84] "89000000000 Республика Мордовия"                                                                                     
+ [85] "92000000000 Республика Татарстан (Татарстан)"                                                                        
+ [86] "94000000000 Удмуртская Республика"                                                                                   
+ [87] "97000000000 Чувашская Республика - Чувашия"                                                                          
+ [88] "57000000000 Пермский край"                                                                                           
+ [89] "            57100000000 Коми-Пермяцкий округ, входящий в состав Пермского края"                                      
+ [90] "33000000000 Кировская область"                                                                                       
+ [91] "22000000000 Нижегородская область"                                                                                   
+ [92] "53000000000 Оренбургская область"                                                                                    
+ [93] "56000000000 Пензенская область"                                                                                      
+ [94] "36000000000 Самарская область"                                                                                       
+ [95] "63000000000 Саратовская область"                                                                                     
+ [96] "73000000000 Ульяновская область"                                                                                     
+ [97] "034 Уральский федеральный округ"                                                                                     
+ [98] "37000000000 Курганская область"                                                                                      
+ [99] "65000000000 Свердловская область"                                                                                    
+[100] "71000000000 Тюменская область"                                                                                       
+[101] "71100000000 Ханты-Мансийский автономный округ - Югра (Тюменская область)"                                            
+[102] "71140000000 Ямало-Ненецкий автономный округ (Тюменская область)"                                                     
+[103] "71001000000 Тюменская область (кроме Ханты-Мансийского автономного округа-Югры и Ямало-Ненецкого автономного округа)"
+[104] "75000000000 Челябинская область"                                                                                     
+[105] "035 Сибирский федеральный округ"                                                                                     
+[106] "036 Дальневосточный федеральный округ"                                                                               
+[107] "039 Крымский федеральный округ"                                                                                      
+[108] "46001000000 Московская обл. в старых границах"                                                                       
+[109] "45001000000 Москва в старых границах"                                                                                </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>d3 <span class="ot">=</span> <span class="fu">filter</span>(d2, <span class="sc">!</span><span class="fu">str_detect</span>(period, <span class="st">'-'</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>d4 <span class="ot">=</span> <span class="fu">separate</span>(d3, period, <span class="fu">c</span>(<span class="st">'percode'</span>, <span class="st">'month'</span>), <span class="at">sep =</span> <span class="st">' '</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>d5 <span class="ot">=</span> <span class="fu">pivot_longer</span>(d4, <span class="at">cols=</span><span class="st">`</span><span class="at">2006</span><span class="st">`</span><span class="sc">:</span><span class="st">`</span><span class="at">2020</span><span class="st">`</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                  <span class="at">names_to =</span> <span class="st">'year'</span>,</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                  <span class="at">values_to =</span> <span class="st">'marriage'</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>d6 <span class="ot">=</span> <span class="fu">separate</span>(d5, region, <span class="fu">c</span>(<span class="st">'regcode'</span>, <span class="st">'region'</span>), </span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>              <span class="at">sep =</span> <span class="st">' '</span>, <span class="at">extra =</span> <span class="st">'merge'</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>d7 <span class="ot">=</span> <span class="fu">select</span>(d6, <span class="sc">-</span>percode)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="co"># export(d7, 'd7.csv')</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># d7 = import('d7.csv')</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(d7)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 19,620
+Columns: 5
+$ regcode  &lt;chr&gt; "643", "643", "643", "643", "643", "643", "643", "643", "643"…
+$ region   &lt;chr&gt; "Российская Федерация", "Российская Федерация", "Российская Ф…
+$ month    &lt;chr&gt; "январь", "январь", "январь", "январь", "январь", "январь", "…
+$ year     &lt;chr&gt; "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013…
+$ marriage &lt;chr&gt; "55,509", "59,495", "58,668", "65,507", "62,980", "57,949", "…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>d8 <span class="ot">=</span> <span class="fu">mutate</span>(d7, <span class="at">regcode =</span> <span class="fu">as.numeric</span>(regcode))</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>d9 <span class="ot">=</span> <span class="fu">mutate</span>(d8, <span class="at">marriage =</span> <span class="fu">as.numeric</span>(<span class="fu">str_remove</span>(marriage, <span class="st">','</span>)))</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>d10 <span class="ot">=</span> <span class="fu">mutate</span>(d9, <span class="at">month =</span> <span class="fu">str_replace</span>(month, <span class="st">'май'</span>, <span class="st">'мая'</span>))</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>d11 <span class="ot">=</span> <span class="fu">mutate</span>(d10, <span class="at">date =</span> <span class="fu">paste0</span>(<span class="st">'01-'</span>, month, <span class="st">'-'</span>, year))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(d11)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 19,620
+Columns: 6
+$ regcode  &lt;dbl&gt; 643, 643, 643, 643, 643, 643, 643, 643, 643, 643, 643, 643, 6…
+$ region   &lt;chr&gt; "Российская Федерация", "Российская Федерация", "Российская Ф…
+$ month    &lt;chr&gt; "январь", "январь", "январь", "январь", "январь", "январь", "…
+$ year     &lt;chr&gt; "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013…
+$ marriage &lt;dbl&gt; 55509, 59495, 58668, 65507, 62980, 57949, 55008, 56123, 59291…
+$ date     &lt;chr&gt; "01-январь-2006", "01-январь-2007", "01-январь-2008", "01-янв…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>d12 <span class="ot">=</span> <span class="fu">mutate</span>(d11, <span class="at">date =</span> <span class="fu">dmy</span>(date))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="co"># export(d12, 'd12.csv')</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># d12 = import('d12.csv')</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="ура-оценим-ets-модель" class="level2">
+<h2 class="anchored" data-anchor-id="ура-оценим-ets-модель">Ура, оценим ETS модель!</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">=</span> <span class="fu">import</span>(<span class="st">'d12.csv'</span>)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(data)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Rows: 19,620
+Columns: 6
+$ regcode  &lt;dbl&gt; 643, 643, 643, 643, 643, 643, 643, 643, 643, 643, 643, 643, 6…
+$ region   &lt;chr&gt; "Российская Федерация", "Российская Федерация", "Российская Ф…
+$ month    &lt;chr&gt; "январь", "январь", "январь", "январь", "январь", "январь", "…
+$ year     &lt;int&gt; 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2…
+$ marriage &lt;int&gt; 55509, 59495, 58668, 65507, 62980, 57949, 55008, 56123, 59291…
+$ date     &lt;IDate&gt; 2006-01-01, 2007-01-01, 2008-01-01, 2009-01-01, 2010-01-01,…</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>rus <span class="ot">=</span> <span class="fu">filter</span>(data, regcode <span class="sc">==</span> <span class="dv">643</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>rus1 <span class="ot">=</span> <span class="fu">select</span>(rus, date, marriage)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>rus2 <span class="ot">=</span> <span class="fu">mutate</span>(rus1, <span class="at">date =</span> <span class="fu">yearmonth</span>(date))</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>rus3 <span class="ot">=</span> <span class="fu">arrange</span>(rus2, date)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>marr <span class="ot">=</span> <span class="fu">as_tsibble</span>(rus3, <span class="at">index =</span> date)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>marr</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tsibble: 180 x 2 [1M]
+       date marriage
+      &lt;mth&gt;    &lt;int&gt;
+ 1 2006 янв    55509
+ 2 2006 фев    62449
+ 3 2006 мар    70798
+ 4 2006 апр    86055
+ 5 2006 мая    35960
+ 6 2006 июн   111409
+ 7 2006 июл   127475
+ 8 2006 авг   149120
+ 9 2006 сен   151116
+10 2006 окт    95192
+# … with 170 more rows</code></pre>
+</div>
+</div>
+<p>График в студию!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(marr, marriage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ts-intro_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_season</span>(marr, marriage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ts-intro_files/figure-html/unnamed-chunk-5-2.png" class="img-fluid" width="672"></p>
+</div>
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_tsdisplay</span>(marr, marriage)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="ts-intro_files/figure-html/unnamed-chunk-5-3.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Оценим несколько моделей!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>mod_table <span class="ot">=</span> <span class="fu">model</span>(marr, </span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">base =</span> <span class="fu">NAIVE</span>(marriage),</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ets_aaa =</span> <span class="fu">ETS</span>(marriage <span class="sc">~</span> <span class="fu">error</span>(<span class="st">'A'</span>) <span class="sc">+</span> <span class="fu">trend</span>(<span class="st">'A'</span>) <span class="sc">+</span> <span class="fu">season</span>(<span class="st">'A'</span>)),</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">log_ets_aaa =</span> <span class="fu">ETS</span>(<span class="fu">log</span>(marriage) <span class="sc">~</span> <span class="fu">error</span>(<span class="st">'A'</span>) <span class="sc">+</span> <span class="fu">trend</span>(<span class="st">'A'</span>) <span class="sc">+</span> <span class="fu">season</span>(<span class="st">'A'</span>))</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="fu">report</span>(<span class="fu">select</span>(mod_table, ets_aaa))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Series: marriage 
+Model: ETS(A,A,A) 
+  Smoothing parameters:
+    alpha = 0.1186864 
+    beta  = 0.005995309 
+    gamma = 0.0001000175 
+
+  Initial states:
+     l[0]     b[0]      s[0]    s[-1]    s[-2]    s[-3]    s[-4]    s[-5]
+ 94053.92 1080.353 -11664.25 -9899.74 3383.458 41550.62 63677.38 44208.74
+   s[-6]     s[-7]     s[-8]     s[-9]    s[-10]    s[-11]
+ 23604.2 -49860.58 -10576.48 -27034.88 -28138.91 -39249.55
+
+  sigma^2:  158270836
+
+     AIC     AICc      BIC 
+4350.343 4354.121 4404.624 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(<span class="fu">components</span>(<span class="fu">select</span>(mod_table, ets_aaa)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 12 row(s) containing missing values (geom_path).</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ts-intro_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Прогнозы:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>fcst <span class="ot">=</span> <span class="fu">forecast</span>(mod_table, <span class="at">h =</span> <span class="st">'2 years'</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>fcst</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A fable: 72 x 4 [1M]
+# Key:     .model [3]
+   .model     date          marriage .mean
+   &lt;chr&gt;     &lt;mth&gt;            &lt;dist&gt; &lt;dbl&gt;
+ 1 base   2021 янв N(54121, 1.2e+09) 54121
+ 2 base   2021 фев N(54121, 2.3e+09) 54121
+ 3 base   2021 мар N(54121, 3.5e+09) 54121
+ 4 base   2021 апр N(54121, 4.6e+09) 54121
+ 5 base   2021 мая N(54121, 5.8e+09) 54121
+ 6 base   2021 июн N(54121, 6.9e+09) 54121
+ 7 base   2021 июл N(54121, 8.1e+09) 54121
+ 8 base   2021 авг N(54121, 9.3e+09) 54121
+ 9 base   2021 сен   N(54121, 1e+10) 54121
+10 base   2021 окт N(54121, 1.2e+10) 54121
+# … with 62 more rows</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">autoplot</span>(fcst, <span class="fu">filter</span>(marr, date <span class="sc">&gt;</span> <span class="fu">ymd</span>(<span class="st">'2018-01-01'</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in mask$eval_all_filter(dots, env_filter): Incompatible methods
+("&gt;.vctrs_vctr", "&gt;.Date") for "&gt;"</code></pre>
+</div>
+<div class="cell-output-display">
+<p><img src="ts-intro_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
 </section>
 
 </main>
